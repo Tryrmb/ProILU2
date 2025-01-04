@@ -92,12 +92,19 @@ public class Enfant {
         return activites;
     }
 
-    public void ajouterActivite(String activite) {
+    public boolean ajouterActivite(String activite) {
         if (nombreActivites >= tailleMax) {
             System.out.println("Erreur : Le nombre maximum d'activités est atteint.");
-            return;
+            return false; // Indique que l'ajout a échoué
+        }
+        for (int i = 0; i < nombreActivites; i++) {
+            if (activites[i].equalsIgnoreCase(activite)) {
+                System.out.println("Erreur : Cette activité existe déjà.");
+                return false; // Indique que l'ajout a échoué
+            }
         }
         activites[nombreActivites++] = activite;
+        return true; // Indique que l'ajout a réussi
     }
 
     public String[] getProblemesDeSante() {

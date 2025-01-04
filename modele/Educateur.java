@@ -4,15 +4,19 @@ public class Educateur {
     private String nom;
     private String email;
     private String motDePasse;
+    private Enfant[] enfants; // Tableau d'enfants
+    private int enfantCount; // Compteur pour suivre le nombre d'enfants associés
 
-    // Constructeur
+    private static final int MAX_ENFANTS = 100; // Limite maximale pour les enfants par éducateur
+
     public Educateur(String nom, String email, String motDePasse) {
         this.nom = nom;
         this.email = email;
         this.motDePasse = motDePasse;
+        this.enfants = new Enfant[MAX_ENFANTS]; // Initialisation du tableau
+        this.enfantCount = 0;
     }
 
-    // Getters
     public String getNom() {
         return nom;
     }
@@ -25,16 +29,17 @@ public class Educateur {
         return motDePasse;
     }
 
-    // Méthode pour vérifier l'identité de l'éducateur
-    public boolean verifierIdentite(String email, String motDePasse) {
-        return this.email.equals(email) && this.motDePasse.equals(motDePasse);
+    public Enfant[] getEnfants() {
+        Enfant[] enfantsActifs = new Enfant[enfantCount];
+        System.arraycopy(enfants, 0, enfantsActifs, 0, enfantCount);
+        return enfantsActifs;
     }
 
-    @Override
-    public String toString() {
-        return "Educateur{" +
-                "nom='" + nom + '\'' +
-                ", email='" + email + '\'' +
-                '}';
+    public void ajouterEnfant(Enfant enfant) {
+        if (enfantCount < MAX_ENFANTS) {
+            enfants[enfantCount++] = enfant;
+        } else {
+            System.err.println("Erreur : Limite maximale d'enfants atteinte pour l'éducateur " + nom);
+        }
     }
 }

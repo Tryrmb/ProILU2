@@ -121,6 +121,19 @@ public class DataStorage {
         return null;
     }
 
+    public Enfant trouverEnfantParNom(String nomEnfant) {
+        for (Parent parent : parents) {
+            if (parent != null) {
+                for (Enfant enfant : parent.getEnfants()) {
+                    if (enfant != null && enfant.getNom().equalsIgnoreCase(nomEnfant)) {
+                        return enfant;
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
     public Educateur trouverEducateurParEmail(String email) {
         for (int i = 0; i < educateurCount; i++) {
             if (educateurs[i].getEmail().equals(email)) {
@@ -128,6 +141,75 @@ public class DataStorage {
             }
         }
         return null;
+    }
+
+    public String[] getActivitesCompatiblesParCategorie(String categorie, Enfant enfant) {
+        String[] activitesCompatiblesTemp = new String[50];
+        int index = 0;
+
+        String[] activitesCategorie = getActivitesParCategorie(categorie);
+
+        if (activitesCategorie != null) {
+            for (String activite : activitesCategorie) {
+                if (activite != null && estCompatible(activite, enfant)) {
+                    activitesCompatiblesTemp[index++] = activite;
+                }
+            }
+        }
+
+        String[] activitesCompatibles = new String[index];
+        System.arraycopy(activitesCompatiblesTemp, 0, activitesCompatibles, 0, index);
+
+        return activitesCompatibles;
+    }
+
+    private boolean estCompatible(String activite, Enfant enfant) {
+        for (String allergie : enfant.getAllergies()) {
+            if (allergie != null && activite.toLowerCase().contains(allergie.toLowerCase())) {
+                return false;
+            }
+        }
+        for (String probleme : enfant.getProblemesDeSante()) {
+            if (probleme != null && activite.toLowerCase().contains(probleme.toLowerCase())) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private String[] getActivitesParCategorie(String categorie) {
+        switch (categorie) {
+            case "Activités Culinaires":
+                return new String[]{
+                        "Gâteau aux pommes",
+                        "Cookie aux chocolats",
+                        "Cupcakes aux fraises",
+                        "Hamburger maison",
+                        "Pizza végétarienne"
+                };
+            case "Activités Récréatives":
+                return new String[]{
+                        "Peinture avec les doigts",
+                        "Jeux d'eau sensoriels",
+                        "Parcours motricité",
+                        "Conte interactif",
+                        "Atelier pâte à modeler"
+                };
+            case "Sorties en Forêt":
+                return new String[]{
+                        "Chasse aux trésors nature",
+                        "Construction cabane miniature",
+                        "Comptine en plein air",
+                        "Parcours sensoriels",
+                        "Observation animaux et insectes"
+                };
+            case "Sorties Aquatiques":
+                return new String[]{
+                        "Bébé nageur", "Bébé nageur", "Bébé nageur", "Bébé nageur", "Bébé nageur"
+                };
+            default:
+                return null;
+        }
     }
 
     public Parent[] getParents() {
@@ -152,4 +234,3 @@ public class DataStorage {
         }
     }
 }
-
